@@ -5,11 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page title</title>
     <link rel="stylesheet" href="./sass/index.scss" />
-    <script type="module" src="./index.js"></script>
+    <!-- <script type="module" src="./index.js"></script> -->
+    <!-- <script type="module" src="./index_calendar.js"></script> -->
+    <script src="./index_calendar2.js" type="module"></script>
     <script src="https://apis.google.com/js/api.js"></script>
   </head>
   <body>
     <!-- ❗️❗️❗️ Add partials like so for every page -->
-    <include src="./partials/example.html"></include>
+    <!-- <include src="./partials/example.html"></include> -->
+    <!-- <div class="calendar-container">
+      <p class="calendar-searchInfo">Search date news</p>
+      <p class="calendar-info"></p>
+      <div class="calendar-full">
+        <p class="calendar-month"></p>
+        <button type="button" data-button="left">le</button>
+        <button type="button" data-button="right">ri</button>
+        <ul class="calendar"></ul>
+      </div>
+    </div> -->
+    <!-- ===== -->
+    <!-- ====== -->
+    <div class="calendar2">
+      <div class="calendar2__search-info">
+        <p class="calendar2__search">Search date news</p>
+        <p class="calendar2__current-date">2023/11/05</p>
+      </div>
+      <div class="calendar2__container">
+        <div class="calendar2__manager-container">
+          <p class="calendar2__month-year">February 2021</p>
+          <button
+            type="button"
+            class="calendar2__button-left"
+            data-button="left"
+          >
+            le
+          </button>
+          <button
+            type="button"
+            class="calendar2__button-right"
+            data-button="right"
+          >
+            ri
+          </button>
+        </div>
+        <ul class="calendar2__weekDays">
+          <li class="calendar2__dayName">Mo</li>
+          <li class="calendar2__dayName">Tu</li>
+          <li class="calendar2__dayName">We</li>
+          <li class="calendar2__dayName">Th</li>
+          <li class="calendar2__dayName">Fr</li>
+          <li class="calendar2__dayName">Sa</li>
+          <li class="calendar2__dayName">Su</li>
+        </ul>
+
+        <ul class="calendar2__dates"></ul>
+      </div>
+    </div>
+    <!-- ++++++++++++++++++++++++++++==== -->
+    <form class="form" action="">
+      <div class="div">
+        <input class="input" type="text" placeholder="input date" />
+        <p class="p">input date</p>
+      </div>
+
+      <input class="input2" type="text" />
+      <!-- <spot-input>probe</spot-input> -->
+    </form>
   </body>
 </html>

@@ -1,0 +1,257 @@
+import CalendarDates from 'calendar-dates';
+const calendarDates = new CalendarDates();
+
+class Calendar {
+  ref = {
+    calendar: document.querySelector('.calendar2'),
+    searchInfo: document.querySelector('.calendar2__search-info'),
+    currentDate: document.querySelector('.calendar2__current-date'),
+    calendarContainer: document.querySelector('.calendar2__container'),
+    monthYearInfo: document.querySelector('.calendar2__month-year'),
+    calendarButtonLeft: document.querySelector(`.calendar2__button-left`),
+    calendarButtonRight: document.querySelector(`.calendar2__button-right`),
+    calendarDates: document.querySelector('.calendar2__dates'),
+  };
+  #calendarArrayDates = [];
+  #calendarArrayHTML = [];
+  #calendarArray = [];
+  #currentDate = {
+    date: new Date().getDate(),
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
+    chosen: new Date().getDate(),
+  };
+  #months = {
+    1: 'January',
+    2: 'February',
+    3: 'March',
+    4: 'April',
+    5: 'May',
+    6: 'June',
+    7: 'July',
+    8: 'August',
+    9: 'September',
+    10: 'October',
+    11: 'November',
+    12: 'December',
+  };
+  #getHTMLMonthYearInfo() {
+    this.ref.monthYearInfo.textContent = `${
+      this.#months[this.#currentDate.month]
+    } ${this.#currentDate.year}`;
+  }
+
+  #getHTMLCurrentDateInfo() {
+    this.ref.currentDate.textContent = `${this.#currentDate.year}/${
+      this.#currentDate.month
+    }/${this.#currentDate.date}`;
+  }
+
+  #getHTMLCalendarDates(dates) {
+    return dates.map(item => {
+      //this.#calendarArray.push(item);
+      if (this.#currentDate.date == item.date && item.type == 'current') {
+        return `<li class='date ${item.type}-month current-date' data-date='${item.type}'>${item.date}</li>`;
+      }
+      return `<li class='date ${item.type}-month' data-date='${item.type}'>${item.date}</li>`;
+    });
+  }
+
+  async futureDate(date = new Date()) {
+    this.#getHTMLMonthYearInfo();
+    this.#getHTMLCurrentDateInfo();
+
+    //const calendarArrayDates = [];
+    for (const meta of await calendarDates.getDates(date)) {
+      this.#calendarArrayDates.push(meta);
+    }
+    console.log(this.#calendarArrayDates);
+    for (const meta of await calendarDates.getMatrix(date)) {
+      if (meta.some(item => item.type === 'current')) {
+        this.#calendarArray = [...this.#calendarArray, ...meta];
+      }
+      this.#calendarArray = [...this.#calendarArray];
+    }
+    //======================
+    const monthLength = this.#calendarArray.filter(
+      item => item.type == 'current'
+    ).length;
+    if (this.#calendarArray[0].type !== 'current') {
+      this.#calendarArray = this.#adoptCalendarForNotCurrentFirstDay(
+        this.#calendarArray,
+        monthLength
+      );
+      this.#calendarArrayHTML = this.#getHTMLCalendarDates(this.#calendarArray);
+    }
+    if (this.#calendarArray[0].type == 'current') {
+      this.#calendarArray = this.#adoptCalendarForCurrentFirstDay(
+        this.#calendarArray,
+        monthLength
+      );
+      this.#calendarArrayHTML = this.#getHTMLCalendarDates(this.#calendarArray);
+    }
+    console.log(this.#calendarArray);
+    const element = this.#calendarArrayHTML.join('');
+    this.ref.calendarDates.innerHTML = element;
+  }
+  activateListeners() {
+    this.ref.calendarDates.addEventListener(
+      'click',
+      this.#calendarContainerOnClick.bind(this)
+    );
+    this.ref.calendarButtonRight.addEventListener(
+      'click',
+      this.#buttonMonthAfterOnClick.bind(this)
+    );
+    this.ref.calendarButtonLeft.addEventListener(
+      'click',
+      this.#buttonMonthBeforeOnClick.bind(this)
+    );
+    this.ref.currentDate.addEventListener(
+      'click',
+      this.#currentDateOnClick.bind(this)
+    );
+  }
+
+  #adoptCalendarForCurrentFirstDay(calendarData, monthLength) {
+    const indexStartDate = this.#calendarArrayDates.findIndex(
+      element => element.iso == calendarData[0].iso
+    );
+    // const indexLastDate = this.#calendarArrayDates.findIndex(
+    //   element => element.iso == calendarData[calendarData.length - 1].iso
+    // );
+    const previousSixDays = this.#calendarArrayDates.slice(
+      indexStartDate - 6,
+      6
+    );
+    calendarData = [...previousSixDays, ...calendarData];
+    if (monthLength >= 30) {
+      calendarData.length = 42;
+      return calendarData;
+    }
+    calendarData.length = 35;
+    return calendarData;
+  }
+
+  #adoptCalendarForNotCurrentFirstDay(calendarData, monthLength) {
+    calendarData.splice(0, 1);
+    const lastDate = calendarData[calendarData.length - 1];
+    const index = this.#calendarArrayDates.findIndex(
+      element => element.iso === lastDate.iso
+    );
+
+    calendarData.push(this.#calendarArrayDates[index + 1]);
+    calendarData.length = 35;
+    return calendarData;
+  }
+
+  #currentDateOnClick() {
+    this.ref.calendarContainer.classList.add('js-calendar-show');
+    console.log(this.ref.calendarContainer);
+  }
+
+  #calendarContainerOnClick(event) {
+    //console.log(event);
+    if (event.target.dataset.date !== 'current') return;
+    const currentDate = event.target.textContent;
+
+    //save current date for future
+    const fullFormatCurrentDate = this.#calendarArray.filter(
+      item => item.type === 'current' && item.date == currentDate
+    );
+    const fullDateArray = fullFormatCurrentDate[0].iso.split('-');
+    this.#currentDate.date = fullDateArray[2];
+    this.#currentDate.month = fullDateArray[1];
+    this.#currentDate.year = fullDateArray[0];
+
+    this.#deleteAndAddCurrentClass(event.target);
+    this.#getHTMLCurrentDateInfo();
+    this.ref.calendarContainer.classList.remove('js-calendar-show');
+  }
+
+  #deleteAndAddCurrentClass(element) {
+    const refPreviousDate = document.querySelector('.current-date');
+    if (refPreviousDate) {
+      refPreviousDate.classList.toggle('current-date');
+    }
+    element.classList.toggle('current-date');
+  }
+  #buttonMonthAfterOnClick(event) {
+    let chosenDate = '';
+    if (this.#currentDate.month == 12) {
+      this.#currentDate.month = 1;
+      this.#currentDate.year = Number(this.#currentDate.year) + 1;
+      chosenDate = `${this.#currentDate.year}/${this.#currentDate.month}/${
+        this.#currentDate.date
+      }`;
+    } else {
+      this.#currentDate.month = Number(this.#currentDate.month) + 1;
+      chosenDate = `${this.#currentDate.year}/${this.#currentDate.month}/${
+        this.#currentDate.date
+      }`;
+    }
+    this.#calendarArray = [];
+    this.#calendarArrayHTML = [];
+    this.#calendarArrayDates = [];
+
+    console.log(chosenDate);
+    this.futureDate(new Date(chosenDate));
+  }
+
+  #buttonMonthBeforeOnClick(event) {
+    let chosenDate = '';
+    if (this.#currentDate.month == 1) {
+      this.#currentDate.month = 12;
+      this.#currentDate.year = Number(this.#currentDate.year) - 1;
+      chosenDate = `${this.#currentDate.year}/${this.#currentDate.month}/${
+        this.#currentDate.date
+      }`;
+    } else {
+      this.#currentDate.month -= 1;
+      chosenDate = `${this.#currentDate.year}/${this.#currentDate.month}/${
+        this.#currentDate.date
+      }`;
+    }
+    this.#calendarArray = [];
+    this.#calendarArrayHTML = [];
+    this.#calendarArrayDates = [];
+
+    console.log(chosenDate);
+    this.futureDate(new Date(chosenDate));
+  }
+}
+
+const calendar = new Calendar();
+calendar.futureDate();
+calendar.activateListeners();
+console.log('hi');
+
+// ==========================
+const refInput = document.querySelector('input');
+const refP = document.querySelector('.p');
+refInput.addEventListener('input', inputOnClick);
+function inputOnClick(event) {
+  console.log(refInput.value);
+  refP.textContent = refInput.value;
+}
+class spotInput extends HTMLElement {
+  constructor(...args) {
+    super(...args);
+
+    // Attaches a shadow root to your custom element.
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+
+    // Defines the "real" input element.
+    let inputElement = document.createElement('input');
+    inputElement.setAttribute('type', this.getAttribute('type'));
+
+    inputElement.addEventListener('focus', () => {
+      console.log('focus on spot input');
+    });
+
+    // Appends the input into the shadow root.
+    shadowRoot.appendChild(inputElement);
+  }
+}
+
+customElements.define('spot-input', spotInput);

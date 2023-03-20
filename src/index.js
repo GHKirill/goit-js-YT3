@@ -1,3 +1,18 @@
+//const CalendarDates = import('calendar-dates');
+import CalendarDates from 'calendar-dates';
+const calendarDates = new CalendarDates();
+
+const main = async () => {
+  for (const meta of await calendarDates.getDates(new Date())) {
+    console.log(meta);
+  }
+
+  for (const meta of await calendarDates.getMatrix(new Date())) {
+    console.log(meta);
+  }
+};
+
+main();
 // const YouTube = require('youtube-sr').default;
 // console.log(YouTube);
 // // const videos = await YouTube.search('playing with fire', { limit: 3 });
@@ -41,6 +56,6 @@
 //     console.log(data);
 //   }
 // });
-fetch(
-  `https://googleapis.com/youtube/v3/search?key=AIzaSyCOd7Y3jAZspvMKYZ_dqAmR1Z0wReTUeh0?publishedAfter='1970-01-01T00:00:00Z'?q='pirate'?maxResults=1`
-).then(response => console.log(response));
+// fetch(
+//   `https://googleapis.com/youtube/v3/search?key=AIzaSyCOd7Y3jAZspvMKYZ_dqAmR1Z0wReTUeh0?publishedAfter='1970-01-01T00:00:00Z'?q='pirate'?maxResults=1`
+// ).then(response => console.log(response));
