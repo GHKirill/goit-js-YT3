@@ -1,0 +1,257 @@
+@import '~node_modules/modern-normalize/modern-normalize.css';
+.example {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+  background-color: #fff;
+  color: #2f2f37;
+  max-width: 960px;
+  padding: 16px;
+}
+
+.example code {
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  background-color: #ff6b0a;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.example .background {
+  height: 240px;
+  background-image: url("../images/logo.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.calendar-container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  width: 300px;
+  margin: 0;
+}
+
+.calendar-info {
+  padding: 5px 15px;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin: 0;
+  cursor: pointer;
+}
+.calendar-info:hover {
+  background-color: blueviolet;
+  color: white;
+}
+
+.calendar-searchInfo {
+  margin: 0;
+}
+
+.calendar-full {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translateY(100%);
+  outline: 1px solid green;
+}
+
+.calendar-month {
+  display: inline-block;
+  margin-right: 50px;
+  cursor: pointer;
+}
+
+.calendar {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 200px;
+}
+
+.date {
+  text-align: center;
+  flex-basis: 14.2857142857%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.date.previous-month,
+.date.next-month {
+  color: grey;
+}
+
+.date.current-month:hover {
+  background-color: blueviolet;
+  color: white;
+}
+
+.date.current-date {
+  background-color: blueviolet;
+  color: white;
+}
+
+.calendar2 {
+  position: relative;
+  margin-top: 50px;
+  margin-left: 50px;
+  outline: 1px solid black;
+  width: 360px;
+}
+
+.calendar2__search-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: bisque;
+}
+
+.calendar2__search {
+  margin: 0;
+  margin-left: 10px;
+}
+
+.calendar2__current-date-container {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.calendar2__current-date {
+  padding: 5px 5px;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  width: 168px;
+  margin: 0;
+  background-color: white;
+  color: #111321;
+  opacity: 40%;
+  border: 1px solid #111321;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.calendar2__current-date.js-date-show {
+  background-color: #4440f6;
+  color: #ffffff;
+  opacity: 100%;
+  border: 1px solid #4440f6;
+}
+
+.calendar2__current-date-before {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  fill: #4440f6;
+  cursor: pointer;
+  transition: color, fill 500ms linear;
+  pointer-events: none;
+}
+.calendar2__current-date-before--active {
+  fill: #ffffff;
+}
+
+.calendar2__current-date-after {
+  position: absolute;
+  top: 9px;
+  right: 12px;
+  fill: #a2a2a2;
+  cursor: pointer;
+  transition: color, fill 500ms linear;
+  pointer-events: none;
+}
+.calendar2__current-date-after--active {
+  fill: #ffffff;
+}
+
+.calendar2__container {
+  position: absolute;
+  top: -200px;
+  z-index: -3;
+  overflow: hidden;
+  right: 0;
+  outline: 1px solid green;
+  width: 250px;
+  border-radius: 10px;
+  transition: transform 500ms linear;
+}
+.calendar2__container.js-calendar-show {
+  transform: translateY(235px);
+}
+
+.calendar2__manager-container {
+  display: flex;
+  padding: 5px 10px;
+}
+
+.calendar2__month-year {
+  padding: 0;
+  margin: 0;
+  flex-grow: 2;
+}
+
+.calendar2__weekDays {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  color: grey;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.calendar2__dates {
+  display: flex;
+  flex-wrap: wrap;
+  -moz-column-gap: 3px;
+       column-gap: 3px;
+  list-style: none;
+  margin: 0;
+  padding: 5px;
+}
+
+.date {
+  text-align: center;
+  flex-basis: calc((100% - 20px) / 7);
+  height: 28px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.date.previous-month,
+.date.next-month {
+  color: grey;
+}
+
+.date.current-month:hover {
+  background-color: blueviolet;
+  color: white;
+}
+
+.date.current-date {
+  background-color: blueviolet;
+  color: white;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  -webkit-clip-path: inset(100%);
+          clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}/*# sourceMappingURL=index.css.map */

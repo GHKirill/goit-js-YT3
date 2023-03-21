@@ -5,12 +5,26 @@ class Calendar {
   ref = {
     calendar: document.querySelector('.calendar2'),
     searchInfo: document.querySelector('.calendar2__search-info'),
+    yearForward: document.querySelector('.calendar2__month-year-button-right'),
     currentDate: document.querySelector('.calendar2__current-date'),
+    calendarCurrentDateBefore: document.querySelector(
+      '.calendar2__current-date-before'
+    ),
+    calendarCurrentDateAfter: document.querySelector(
+      '.calendar2__current-date-after'
+    ),
+    calendarCurrentDateSvgUp: document.querySelector(
+      '.calendar2__current-date-svg-up'
+    ),
+    calendarCurrentDateSvgDown: document.querySelector(
+      '.calendar2__current-date-svg-down'
+    ),
     calendarContainer: document.querySelector('.calendar2__container'),
     monthYearInfo: document.querySelector('.calendar2__month-year'),
     calendarButtonLeft: document.querySelector(`.calendar2__button-left`),
     calendarButtonRight: document.querySelector(`.calendar2__button-right`),
     calendarDates: document.querySelector('.calendar2__dates'),
+    rootElement: document.querySelector('.observer'),
   };
   #calendarArrayDates = [];
   #calendarArrayHTML = [];
@@ -45,6 +59,9 @@ class Calendar {
     this.ref.currentDate.textContent = `${this.#currentDate.year}/${
       this.#currentDate.month
     }/${this.#currentDate.date}`;
+    // this.ref.currentDate.value = `${this.#currentDate.year}/${
+    //   this.#currentDate.month
+    // }/${this.#currentDate.date}`;
   }
 
   #getHTMLCalendarDates(dates) {
@@ -111,6 +128,10 @@ class Calendar {
       'click',
       this.#currentDateOnClick.bind(this)
     );
+    this.ref.yearForward.addEventListener(
+      'click',
+      this.#yearForwardOnClick.bind(this)
+    );
   }
 
   #adoptCalendarForCurrentFirstDay(calendarData, monthLength) {
@@ -146,12 +167,21 @@ class Calendar {
   }
 
   #currentDateOnClick() {
-    this.ref.calendarContainer.classList.add('js-calendar-show');
-    console.log(this.ref.calendarContainer);
+    this.ref.calendarContainer.classList.toggle('js-calendar-show');
+    //console.log(this.ref.calendarContainer);
+    this.ref.currentDate.classList.add('js-date-show');
+    this.ref.calendarCurrentDateBefore.classList.add(
+      'calendar2__current-date-before--active'
+    );
+    this.ref.calendarCurrentDateAfter.classList.add(
+      'calendar2__current-date-after--active'
+    );
+    this.ref.calendarCurrentDateSvgDown.classList.toggle('visually-hidden');
+    this.ref.calendarCurrentDateSvgUp.classList.toggle('visually-hidden');
   }
 
   #calendarContainerOnClick(event) {
-    //console.log(event);
+    console.log(event);
     if (event.target.dataset.date !== 'current') return;
     const currentDate = event.target.textContent;
 
@@ -167,6 +197,8 @@ class Calendar {
     this.#deleteAndAddCurrentClass(event.target);
     this.#getHTMLCurrentDateInfo();
     this.ref.calendarContainer.classList.remove('js-calendar-show');
+    this.ref.calendarCurrentDateSvgDown.classList.remove('visually-hidden');
+    this.ref.calendarCurrentDateSvgUp.classList.add('visually-hidden');
   }
 
   #deleteAndAddCurrentClass(element) {
@@ -219,39 +251,21 @@ class Calendar {
     console.log(chosenDate);
     this.futureDate(new Date(chosenDate));
   }
+  #yearForwardOnClick(event) {
+    let chosenDate = '';
+    this.#currentDate.year = Number(this.#currentDate.year) + 1;
+    chosenDate = `${this.#currentDate.year}/${this.#currentDate.month}/${
+      this.#currentDate.date
+    }`;
+    this.#calendarArray = [];
+    this.#calendarArrayHTML = [];
+    this.#calendarArrayDates = [];
+
+    console.log(chosenDate);
+    this.futureDate(new Date(chosenDate));
+  }
 }
 
 const calendar = new Calendar();
 calendar.futureDate();
 calendar.activateListeners();
-console.log('hi');
-
-// ==========================
-const refInput = document.querySelector('input');
-const refP = document.querySelector('.p');
-refInput.addEventListener('input', inputOnClick);
-function inputOnClick(event) {
-  console.log(refInput.value);
-  refP.textContent = refInput.value;
-}
-class spotInput extends HTMLElement {
-  constructor(...args) {
-    super(...args);
-
-    // Attaches a shadow root to your custom element.
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-
-    // Defines the "real" input element.
-    let inputElement = document.createElement('input');
-    inputElement.setAttribute('type', this.getAttribute('type'));
-
-    inputElement.addEventListener('focus', () => {
-      console.log('focus on spot input');
-    });
-
-    // Appends the input into the shadow root.
-    shadowRoot.appendChild(inputElement);
-  }
-}
-
-customElements.define('spot-input', spotInput);
